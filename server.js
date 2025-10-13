@@ -1,4 +1,4 @@
-// server.js - Node + Express + mysql2 (CommonJS) - Adaptado para PlanetScale + Render
+// server.js - Node + Express + mysql2 (CommonJS) - Versão adaptada para Railway MySQL
 require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise');
@@ -13,38 +13,30 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// === CONFIGURAÇÃO DO BANCO (PlanetScale via .env) ===
-// Exemplo de .env: DATABASE_URL="mysql2://USER:PASS@HOST/DB?ssl={"rejectUnauthorized":true}"
+// === CONFIG DB (Railway) ===
+// Railway fornece variáveis automaticamente: MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE
 let pool;
+
 (async function initPool() {
   try {
-    if (process.env.DATABASE_URL) {
-      // Conexão via string única (PlanetScale)
-      pool = await mysql.createPool({
-        uri: process.env.DATABASE_URL,
-        waitForConnections: true,
-        connectionLimit: 10,
-      });
-      console.log('✅ Conectado ao PlanetScale com sucesso!');
-    } else {
-      // Fallback local (para rodar offline)
-      pool = await mysql.createPool({
-        host: process.env.DB_HOST || '127.0.0.1',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASS || '',
-        database: process.env.DB_NAME || 'console',
-        waitForConnections: true,
-        connectionLimit: 10,
-      });
-      console.log('✅ Conectado ao MySQL local.');
-    }
+    pool = await mysql.createPool({
+      host: process.env.MYSQLHOST || '127.0.0.1',
+      port: process.env.MYSQLPORT || 3306,
+      user: process.env.MYSQLUSER || 'root',
+      password: process.env.MYSQLPASSWORD || '',
+      database: process.env.MYSQLDATABASE || 'console',
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
+    console.log('✅ Conectado ao banco MySQL (Railway).');
   } catch (err) {
-    console.error('❌ Falha ao conectar ao banco:', err.message);
+    console.error('❌ Erro ao conectar ao banco:', err.message);
     process.exit(1);
   }
 })();
 
-// === Helpers ===
+// === Funções auxiliares ===
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.createHmac('sha256', salt).update(password).digest('hex');
@@ -68,7 +60,7 @@ async function ensureUsersTable() {
   }
 }
 
-// === ROUTES ===
+// === ROTAS ===
 
 // Login
 app.post('/api/login', async (req, res) => {
@@ -101,7 +93,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Create permanent user
+// Criar usuário permanente
 app.post('/api/create_permanent', async (req, res) => {
   try {
     const { username, nome, password } = req.body;
@@ -126,7 +118,7 @@ app.post('/api/create_permanent', async (req, res) => {
   }
 });
 
-// Create temporary user
+// Criar usuário temporário
 app.post('/api/create_temporary', async (req, res) => {
   try {
     const { username, nome, password, hours } = req.body;
@@ -155,7 +147,7 @@ app.post('/api/create_temporary', async (req, res) => {
   }
 });
 
-// Get users
+// Listar usuários
 app.post('/api/get_users', async (req, res) => {
   try {
     const [cols] = await pool.query('SHOW COLUMNS FROM users');
@@ -175,7 +167,7 @@ app.post('/api/get_users', async (req, res) => {
   }
 });
 
-// Search name
+// Buscar nome
 app.post('/api/search_name', async (req, res) => {
   try {
     const name = (req.body.name || '').trim();
@@ -191,7 +183,7 @@ app.post('/api/search_name', async (req, res) => {
   }
 });
 
-// Search CPF
+// Buscar CPF
 app.post('/api/search_cpf', async (req, res) => {
   try {
     const cpf = (req.body.cpf || '').trim();
@@ -204,11 +196,11 @@ app.post('/api/search_cpf', async (req, res) => {
   }
 });
 
-// Serve frontend fallback
+// Servir frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Porta dinâmica (Render define process.env.PORT)
-const PORT = process.env.PORT || 10000;
+// Porta dinâmica (Railway usa process.env.PORT)
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🌐 Servidor rodando na porta ${PORT}`));
