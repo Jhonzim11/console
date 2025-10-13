@@ -20,10 +20,10 @@ let pool;
 (async function initPool() {
   try {
     pool = await mysql.createPool({
-      host: process.env.MYSQLHOST || 'mysql.railway.internal',
-      port: process.env.MYSQLPORT || 3306,
+      host: process.env.MYSQLHOST || 'shinkansen.proxy.rlwy.net',
+      port: process.env.MYSQLPORT || 17973,
       user: process.env.MYSQLUSER || 'root',
-      password: process.env.MYSQLPASSWORD || 'QrfYfImOmEnYVDCLexWpxlwnRNrFNkdM',
+      password: process.env.MYSQLPASSWORD || 'OWpbwoGiubstkTwoLEqpVivcGgrSMPFF',
       database: process.env.MYSQLDATABASE || 'railway',
       waitForConnections: true,
       connectionLimit: 10,
