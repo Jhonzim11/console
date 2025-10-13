@@ -23,7 +23,7 @@ let pool;
       host: process.env.MYSQLHOST || '127.0.0.1',
       port: process.env.MYSQLPORT || 3306,
       user: process.env.MYSQLUSER || 'root',
-      password: process.env.MYSQLPASSWORD || '',
+      password: process.env.MYSQLPASSWORD || 'QrfYfImOmEnYVDCLexWpxlwnRNrFNkdM',
       database: process.env.MYSQLDATABASE || 'console',
       waitForConnections: true,
       connectionLimit: 10,
