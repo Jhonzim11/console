@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Console</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Matrix background effect -->
+    <div class="matrix-bg" id="matrix"></div>
+    
+    <!-- Scan line effect -->
+    <div class="scan-line"></div>
+    
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <h2 class="glitch-text" data-text="ACCESS CONTROL">ACCESS CONTROL</h2>
+        <div class="input-group">
+            <label for="username">USERNAME:</label>
+            <input type="text" id="username" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label for="password">PASSWORD:</label>
+            <input type="password" id="password" autocomplete="off">
+        </div>
+        <button class="btn" onclick="login()">LOGIN</button>
+    </div>
+    
+    <!-- Main Console -->
+    <div class="console" id="mainConsole">
+        <div class="console-header">
+            <h2>SYSTEM CONSOLE v2.3.5</h2>
+            <div><span id="clock"></span> | <span id="connection-status">CONNECTED</span></div>
+        </div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+        <div class="terminal" id="terminal">> System initialized...
+> Connection established...
+> Security protocols active...
+> Type "help" for available commands.
+</div>
+        <div class="command-input">
+            <span>$</span>
+            <input type="text" id="commandInput" placeholder="Enter command..." onkeypress="handleCommand(event)">
+        </div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <h2>ADMINISTRATION PANEL</h2>
+        <div class="panel-section">
+            <h3>Create Permanent Account</h3>
+            <div class="input-group">
+                <label>USERNAME:</label>
+                <input type="text" id="permUsername">
+            </div>
+            <div class="input-group">
+                <label>DISPLAY NAME:</label>
+                <input type="text" id="permName">
+            </div>
+            <div class="input-group">
+                <label>PASSWORD:</label>
+                <input type="password" id="permPassword">
+            </div>
+            <button class="btn" onclick="createPermanentAccount()">CREATE ACCOUNT</button>
+        </div>
+        
+        <div class="panel-section">
+            <h3>Create Temporary Account</h3>
+            <div class="input-group">
+                <label>USERNAME:</label>
+                <input type="text" id="tempUsername">
+            </div>
+            <div class="input-group">
+                <label>DISPLAY NAME:</label>
+                <input type="text" id="tempName">
+            </div>
+            <div class="input-group">
+                <label>PASSWORD:</label>
+                <input type="password" id="tempPassword">
+            </div>
+            <div class="input-group">
+                <label>EXPIRATION (hours):</label>
+                <input type="number" id="tempExpiration" value="24">
+            </div>
+            <button class="btn" onclick="createTemporaryAccount()">CREATE TEMP ACCOUNT</button>
+        </div>
+        
+        <div class="panel-section">
+            <h3>USER ACCOUNTS</h3>
+            <div class="table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Display Name</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Expiration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- User data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
