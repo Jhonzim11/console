@@ -24,7 +24,7 @@ let pool;
       port: process.env.MYSQLPORT || 3306,
       user: process.env.MYSQLUSER || 'root',
       password: process.env.MYSQLPASSWORD || 'QrfYfImOmEnYVDCLexWpxlwnRNrFNkdM',
-      database: process.env.MYSQLDATABASE || 'console',
+      database: process.env.MYSQLDATABASE || 'railway',
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
